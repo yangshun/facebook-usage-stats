@@ -1,4 +1,4 @@
-![Logo](icon-128.png)
+![Logo](icons/icon-128.png)
 
 Facebook Usage Stats
 ======================

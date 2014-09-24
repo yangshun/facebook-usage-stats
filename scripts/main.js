@@ -41,6 +41,11 @@
     $('.fbll-limit').text(LIKES_LIMIT);
     $('.fbll-time-spent').text(timeFormat(currentTimeSpent));
 
+    chrome.runtime.onMessage.addListener(
+      function(message, sender, sendResponse) {
+        console.log("Message from extension", message)
+    });
+
     $('body').on('click', '.UFILikeLink', function (e) { 
       if (currentLikes < LIKES_LIMIT) {
         currentLikes++;

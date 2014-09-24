@@ -22,7 +22,34 @@
   };
 
   var currentLikes = storage.getLikes();
-  var currentTimeSpent = storage.getTimeSpent();
+
+  var timer = {
+    clock: null,
+    currentTimeSpent: storage.getTimeSpent(),
+    timeFormat: function (totalSeconds) {
+      function formatForTen (value) {
+        return value < 10 ? '0' + value.toString() : value.toString();
+      }
+      var hours =  Math.floor(totalSeconds / 3600).toString();
+      var totalSeconds = totalSeconds % 3600;
+      var minutes = Math.floor(totalSeconds / 60).toString();
+      minutes = hours > 0 ? formatForTen(minutes) : minutes;
+      var seconds = (totalSeconds % 60);
+      seconds = formatForTen(seconds);
+      return (hours > 0 ? hours + ':' : '') + minutes + ':' + seconds;
+    },
+    startTimer: function () {
+      var that = this;
+      this.stopTimer();
+      this.clock = setInterval(function () {
+        that.currentTimeSpent++;
+        $('.fbll-time-spent').text(that.timeFormat(that.currentTimeSpent));
+      }, 1000);
+    },
+    stopTimer: function () {
+      clearInterval(this.clock);
+    }
+  };
 
   $.ajax({
     url: template,
@@ -34,23 +61,10 @@
     }
   });
 
-  function timeFormat (totalSeconds) {
-    function formatForTen (value) {
-      return value < 10 ? '0' + value.toString() : value.toString();
-    }
-    var hours =  Math.floor(totalSeconds / 3600).toString();
-    var totalSeconds = totalSeconds % 3600;
-    var minutes = Math.floor(totalSeconds / 60).toString();
-    minutes = hours > 0 ? formatForTen(minutes) : minutes;
-    var seconds = (totalSeconds % 60);
-    seconds = formatForTen(seconds);
-    return (hours > 0 ? hours + ':' : '') + minutes + ':' + seconds;
-  }
-
   function init () {
     $('.fbll-count').text(currentLikes);
     $('.fbll-limit').text(LIKES_LIMIT);
-    $('.fbll-time-spent').text(timeFormat(currentTimeSpent));
+    $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
 
     $('body').on('click', '.UFILikeLink', function (e) { 
       if (currentLikes < LIKES_LIMIT) {
@@ -64,31 +78,17 @@
       }
     });
 
-    var timer = null;
-
-    function startTimer () {
-      stopTimer();
-      timer = setInterval(function () {
-        currentTimeSpent++;
-        $('.fbll-time-spent').text(timeFormat(currentTimeSpent));
-      }, 1000);
-    }
-
-    function stopTimer () {
-      clearInterval(timer);
-    }
-
     $(window).on('focus', function () {
-      currentTimeSpent = storage.getTimeSpent();
-      $('.fbll-time-spent').text(timeFormat(currentTimeSpent));
-      startTimer();
+      timer.currentTimeSpent = storage.getTimeSpent();
+      $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
+      timer.startTimer();
     });
 
     $(window).on('blur beforeunload', function () {
-      storage.saveTimeSpent(currentTimeSpent);
-      stopTimer();
+      storage.saveTimeSpent(timer.currentTimeSpent);
+      timer.stopTimer();
     });
 
-    startTimer();
+    timer.startTimer();
   }  
 })();

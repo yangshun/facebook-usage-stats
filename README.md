@@ -5,7 +5,7 @@ Facebook Usage Stats
 
 ### Introduction
 
-I have come to realize that I have been liking too many things on Facebook and likes have lost its meaning. Therefore I built this Chrome extension to limit myself to 10 Facebook posts/comments likes a day, so that I will like more sparingly.
+I have come to realize that I have been liking too many things on Facebook and my likes have lost its meaning. Therefore I built this Chrome extension to limit myself to 10 Facebook posts/comments likes a day, so that I will like more sparingly.
 
 Also, it shows me how much time I spend on the Facebook page and I will know how much time I have wasted.
 

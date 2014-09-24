@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Facebook Control",
-  "short_name": "Facebook Control",
+  "name": "Facebook Usage Stats",
+  "short_name": "Facebook Usage Stats",
   "description": "Think twice before giving out your likes! Limit the number of items you can like on Facebook daily and track how long you have spent on Facebook today.",
   "version": "1.0",
 

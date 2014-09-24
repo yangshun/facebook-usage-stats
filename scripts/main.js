@@ -3,15 +3,20 @@
   var template = chrome.extension.getURL('box.html');
   var currentDate = new Date().toLocaleDateString('en-US');
   var LIKES_LIMIT = 10;
-  var currentLikes = localStorage.getItem(currentDate + '-likes');
-  if (!currentLikes) {
-    currentLikes = 0;
+
+  function getLikesFromStorage() {
+    var likes = parseInt(localStorage.getItem(currentDate + '-likes'));
+    return isNaN(likes) ? 0 : likes;
   }
 
-  var currentTimeSpent = localStorage.getItem(currentDate + '-time-spent');
-  if (!currentTimeSpent) {
-    currentTimeSpent = 0;
+  function getTimeSpentFromStorage() {
+    var timeSpent = parseInt(localStorage.getItem(currentDate + '-time-spent'));
+    return isNaN(timeSpent) ? 0 : timeSpent;
   }
+
+  var currentLikes = getLikesFromStorage();
+  var currentTimeSpent = getTimeSpentFromStorage();
+
 
   $.ajax({
     url: template,
@@ -73,7 +78,7 @@
     }
 
     $(window).on('focus', function () {
-      currentTimeSpent = localStorage.getItem(currentDate + '-time-spent');
+      currentTimeSpent = getTimeSpentFromStorage();
       $('.fbll-time-spent').text(timeFormat(currentTimeSpent));
       startTimer();
     });

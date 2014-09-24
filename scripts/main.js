@@ -4,19 +4,26 @@
   var currentDate = new Date().toLocaleDateString('en-US');
   var LIKES_LIMIT = 10;
 
-  function getLikesFromStorage() {
+  function getLikesFromStorage () {
     var likes = parseInt(localStorage.getItem(currentDate + '-likes'));
     return isNaN(likes) ? 0 : likes;
   }
 
-  function getTimeSpentFromStorage() {
+  function saveLikesToStorage (likes) {
+    localStorage.setItem(currentDate + '-likes', likes);
+  }
+
+  function getTimeSpentFromStorage () {
     var timeSpent = parseInt(localStorage.getItem(currentDate + '-time-spent'));
     return isNaN(timeSpent) ? 0 : timeSpent;
   }
 
+  function saveTimeSpentToStorage (time) {
+    localStorage.setItem(currentDate + '-time-spent', time);
+  }
+
   var currentLikes = getLikesFromStorage();
   var currentTimeSpent = getTimeSpentFromStorage();
-
 
   $.ajax({
     url: template,
@@ -55,7 +62,7 @@
       if (currentLikes < LIKES_LIMIT) {
         currentLikes++;
         $('.fbll-count').text(currentLikes);
-        localStorage.setItem(currentDate + '-likes', currentLikes);
+        saveLikesToStorage(currentLikes);
       } else {
         alert('Sorry, no more likes for you today!');
         e.preventDefault();
@@ -66,7 +73,7 @@
     var timer = null;
 
     function startTimer () {
-      clearInterval(timer);
+      stopTimer();
       timer = setInterval(function () {
         currentTimeSpent++;
         $('.fbll-time-spent').text(timeFormat(currentTimeSpent));
@@ -83,14 +90,10 @@
       startTimer();
     });
 
-    $(window).on('blur', function () {
-      localStorage.setItem(currentDate + '-time-spent', currentTimeSpent);
+    $(window).on('blur beforeunload', function () {
+      saveTimeSpentToStorage(currentTimeSpent);
       stopTimer();
     });
-
-    window.onbeforeunload = function(event) {
-      localStorage.setItem(currentDate + '-time-spent', currentTimeSpent);
-    };
 
     startTimer();
   }  

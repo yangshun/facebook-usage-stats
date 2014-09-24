@@ -1,0 +1,21 @@
+#fbll-count-box {
+  background-color: #eef0f1;
+  border-top: 1px solid #aab0bf;
+  border-right: 1px solid #aab0bf;
+  border-top-right-radius: 2px;
+  bottom: 0;
+  color: #000;
+  height: auto;
+  left: 0;
+  padding: 7px;
+  position: fixed;
+  text-align: left;
+  width: auto;
+}
+
+#fbll-count-box span {
+  font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 15px;
+}

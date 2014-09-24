@@ -1,0 +1,33 @@
+{
+  "manifest_version": 2,
+
+  "name": "Facebook Control",
+  "short_name": "Facebook Control",
+  "description": "Think twice before giving out your likes! Limit the number of items you can like on Facebook daily and track how long you have spent on Facebook today.",
+  "version": "1.0",
+
+  "content_scripts": [
+    {
+      "matches": ["*://www.facebook.com/*"],
+      "js": [ 
+        "scripts/vendor/jquery.min.js",
+        "scripts/main.js"
+      ],
+      "css": [
+        "styles/style.css"
+      ]
+    }
+  ],
+
+  "icons": { 
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png",
+    "256": "icons/icon-256.png"
+  },
+
+  "web_accessible_resources": [
+    "box.html",
+    "scripts/vendor/jquery.min.map"
+  ]
+}

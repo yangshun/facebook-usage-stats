@@ -4,26 +4,25 @@
   var currentDate = new Date().toLocaleDateString('en-US');
   var LIKES_LIMIT = 10;
 
-  function getLikesFromStorage () {
-    var likes = parseInt(localStorage.getItem(currentDate + '-likes'));
-    return isNaN(likes) ? 0 : likes;
-  }
+  var storage = {
+    getLikes: function () {
+      var likes = parseInt(localStorage.getItem(currentDate + '-likes'));
+      return isNaN(likes) ? 0 : likes;
+    },
+    saveLikes: function (likes) {
+      localStorage.setItem(currentDate + '-likes', likes);
+    },
+    getTimeSpent: function () {
+      var timeSpent = parseInt(localStorage.getItem(currentDate + '-time-spent'));
+      return isNaN(timeSpent) ? 0 : timeSpent;
+    },
+    saveTimeSpent: function (time) {
+      localStorage.setItem(currentDate + '-time-spent', time);
+    }
+  };
 
-  function saveLikesToStorage (likes) {
-    localStorage.setItem(currentDate + '-likes', likes);
-  }
-
-  function getTimeSpentFromStorage () {
-    var timeSpent = parseInt(localStorage.getItem(currentDate + '-time-spent'));
-    return isNaN(timeSpent) ? 0 : timeSpent;
-  }
-
-  function saveTimeSpentToStorage (time) {
-    localStorage.setItem(currentDate + '-time-spent', time);
-  }
-
-  var currentLikes = getLikesFromStorage();
-  var currentTimeSpent = getTimeSpentFromStorage();
+  var currentLikes = storage.getLikes();
+  var currentTimeSpent = storage.getTimeSpent();
 
   $.ajax({
     url: template,
@@ -62,7 +61,7 @@
       if (currentLikes < LIKES_LIMIT) {
         currentLikes++;
         $('.fbll-count').text(currentLikes);
-        saveLikesToStorage(currentLikes);
+        storage.saveLikes(currentLikes);
       } else {
         alert('Sorry, no more likes for you today!');
         e.preventDefault();
@@ -85,13 +84,13 @@
     }
 
     $(window).on('focus', function () {
-      currentTimeSpent = getTimeSpentFromStorage();
+      currentTimeSpent = storage.getTimeSpent();
       $('.fbll-time-spent').text(timeFormat(currentTimeSpent));
       startTimer();
     });
 
     $(window).on('blur beforeunload', function () {
-      saveTimeSpentToStorage(currentTimeSpent);
+      storage.saveTimeSpent(currentTimeSpent);
       stopTimer();
     });
 

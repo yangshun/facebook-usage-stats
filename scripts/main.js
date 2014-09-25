@@ -80,19 +80,14 @@
 
     chrome.runtime.onMessage.addListener(
       function(message, sender, sendResponse) {
-        console.log("Message from extension", message)
-    });
-
-    $('body').on('click', '.UFILikeLink', function (e) { 
-      if (currentLikes < LIKES_LIMIT) {
-        currentLikes++;
-        $('.fbll-count').text(currentLikes);
-        storage.saveLikes(currentLikes);
-      } else {
-        alert('Sorry, no more likes for you today!');
-        e.preventDefault();
-        e.stopPropagation();
-      }
+        console.log("Message from extension", message);
+        if (message.type && message.type == 'updateLike') {
+          storage.getLikes(function(likes) {
+            $('.fbll-count').text(likes);
+          });
+        } else if (message.type && message.type == 'likeBlocked') {
+            alert('Sorry, no more likes for you today!');
+        }
     });
 
     $(window).on('focus', function () {
@@ -107,5 +102,5 @@
     });
 
     timer.startTimer();
-  }  
+  }
 })();

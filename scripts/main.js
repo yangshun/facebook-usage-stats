@@ -1,27 +1,30 @@
 (function () {
 
   var template = chrome.extension.getURL('box.html');
-  var currentDate = new Date().toLocaleDateString('en-US');
+  var currentDate = function() {
+    return new Date().toLocaleDateString('en-US');
+  };
+  // TODO: Refactor into options
   var LIKES_LIMIT = 10;
 
   var storage = {
-    getLikes: function () {
-      var likes = parseInt(localStorage.getItem(currentDate + '-likes'));
-      return isNaN(likes) ? 0 : likes;
-    },
-    saveLikes: function (likes) {
-      localStorage.setItem(currentDate + '-likes', likes);
+    /**
+     * [ASYNC] Request the latest likes count from background page.
+     * @param  callback should be of the form function(response) {...}
+     *                  where likes is the retrieved like count
+     */
+    getLikes: function (callback) {
+      chrome.runtime.sendMessage({type: 'requestLikes'}, callback);
     },
     getTimeSpent: function () {
-      var timeSpent = parseInt(localStorage.getItem(currentDate + '-time-spent'));
+      var timeSpent = parseInt(localStorage.getItem(currentDate() + '-time-spent'));
       return isNaN(timeSpent) ? 0 : timeSpent;
     },
     saveTimeSpent: function (time) {
-      localStorage.setItem(currentDate + '-time-spent', time);
+      localStorage.setItem(currentDate() + '-time-spent', time);
     }
   };
 
-  var currentLikes = storage.getLikes();
 
   var timer = {
     clock: null,
@@ -61,22 +64,28 @@
     }
   });
 
+  /**
+   * Callback to process a message from another sender.
+   * Mainly used to be added as onMessage callback.
+   */
+  function onMessage(message, sender, sendResponse) {
+    console.log("Message from extension", message);
+    // New likes triggered from a tab
+    if (message.type && message.type == 'updateLike') {
+      $('.fbll-count').text(message.likes);
+    // A like has been blocked due to reaching daily limit
+    } else if (message.type && message.type == 'likeBlocked') {
+        alert('Sorry, no more likes for you today!');
+    }
+  }
+
   function init () {
-    $('.fbll-count').text(currentLikes);
+    storage.getLikes(onMessage);
+
     $('.fbll-limit').text(LIKES_LIMIT);
     $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
 
-    $('body').on('click', '.UFILikeLink', function (e) { 
-      if (currentLikes < LIKES_LIMIT) {
-        currentLikes++;
-        $('.fbll-count').text(currentLikes);
-        storage.saveLikes(currentLikes);
-      } else {
-        alert('Sorry, no more likes for you today!');
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    });
+    chrome.runtime.onMessage.addListener(onMessage);
 
     $(window).on('focus', function () {
       timer.currentTimeSpent = storage.getTimeSpent();
@@ -90,5 +99,5 @@
     });
 
     timer.startTimer();
-  }  
+  }
 })();

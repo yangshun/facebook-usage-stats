@@ -49,6 +49,23 @@ function broadcastToFacebookTabs(msg) {
 }
 
 console.log("alive");
+
+chrome.runtime.onMessage.addListener(
+  function(message, sender, sendResponse) {
+    console.log("Message from tab", message);
+    // Content scirpt is requesting likes count
+    if (message.type && message.type == 'requestLikes') {
+      storage.getLikes(function(likes) {
+        console.log("Sending respones via...", sendResponse);
+        sendResponse({type: "updateLike", likes: likes});
+      })
+      // GOTCHA: since getLikes is asynchronous, return true to keep the channel open
+      // so sendResponse can be called when getLike callback fires.
+      // See: https://developer.chrome.com/extensions/runtime#method-sendMessage
+      return true;
+    }
+});
+
 chrome.webRequest.onBeforeRequest.addListener(
   function(details) {
     if (details.requestBody && details.requestBody.raw) {

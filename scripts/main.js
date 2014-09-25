@@ -9,20 +9,12 @@
 
   var storage = {
     /**
-     * [ASYNC] Retrieve the current like count of the day from storage.
-     * @param  callback should be of the form function(likes) {...}
+     * [ASYNC] Request the latest likes count from background page.
+     * @param  callback should be of the form function(response) {...}
      *                  where likes is the retrieved like count
      */
     getLikes: function (callback) {
-      chrome.storage.local.get(currentDate() + '-likes', function(items) {
-        console.log("Get Likes: ", items[currentDate() + '-likes']);
-        if (items[currentDate() + '-likes']) {
-          callback(items[currentDate() + '-likes']);
-        } else {
-          // return 0 as default value
-          callback(0);
-        }
-      })
+      chrome.runtime.sendMessage({type: 'requestLikes'}, callback);
     },
     getTimeSpent: function () {
       var timeSpent = parseInt(localStorage.getItem(currentDate() + '-time-spent'));
@@ -72,24 +64,28 @@
     }
   });
 
+  /**
+   * Callback to process a message from another sender.
+   * Mainly used to be added as onMessage callback.
+   */
+  function onMessage(message, sender, sendResponse) {
+    console.log("Message from extension", message);
+    // New likes triggered from a tab
+    if (message.type && message.type == 'updateLike') {
+      $('.fbll-count').text(message.likes);
+    // A like has been blocked due to reaching daily limit
+    } else if (message.type && message.type == 'likeBlocked') {
+        alert('Sorry, no more likes for you today!');
+    }
+  }
+
   function init () {
-    storage.getLikes(function(likes) {
-      $('.fbll-count').text(likes);
-    });
+    storage.getLikes(onMessage);
+
     $('.fbll-limit').text(LIKES_LIMIT);
     $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
 
-    chrome.runtime.onMessage.addListener(
-      function(message, sender, sendResponse) {
-        console.log("Message from extension", message);
-        // New likes triggered from a tab
-        if (message.type && message.type == 'updateLike') {
-          $('.fbll-count').text(message.likes);
-        // A like has been blocked due to reaching daily limit
-        } else if (message.type && message.type == 'likeBlocked') {
-            alert('Sorry, no more likes for you today!');
-        }
-    });
+    chrome.runtime.onMessage.addListener(onMessage);
 
     $(window).on('focus', function () {
       timer.currentTimeSpent = storage.getTimeSpent();

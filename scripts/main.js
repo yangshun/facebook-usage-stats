@@ -97,9 +97,7 @@
         console.log("Message from extension", message);
         // New likes triggered from a tab
         if (message.type && message.type == 'updateLike') {
-          storage.getLikes(function(likes) {
-            $('.fbll-count').text(likes);
-          });
+          $('.fbll-count').text(message.likes);
         // A like has been blocked due to reaching daily limit
         } else if (message.type && message.type == 'likeBlocked') {
             alert('Sorry, no more likes for you today!');

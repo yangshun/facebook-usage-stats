@@ -58,7 +58,7 @@ chrome.webRequest.onBeforeRequest.addListener(
         if (currentLikes < LIKES_LIMIT) {
           currentLikes++;
           storage.saveLikes(currentLikes, function(likes) {
-            broadcastToFacebookTabs({type: "updateLike"});
+            broadcastToFacebookTabs({type: "updateLike", likes: likes});
           });
         } else {
           chrome.tabs.sendMessage(details.tabId, {type: "likeBlocked"});
@@ -67,7 +67,7 @@ chrome.webRequest.onBeforeRequest.addListener(
       } else if (query.like_action && query.like_action === "false") {
         if (currentLikes > 0) currentLikes--;
         storage.saveLikes(currentLikes, function(likes) {
-          broadcastToFacebookTabs({type: "updateLike"});
+          broadcastToFacebookTabs({type: "updateLike", likes: likes});
         });
       }
     }

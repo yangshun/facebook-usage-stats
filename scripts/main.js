@@ -1,7 +1,9 @@
 (function () {
 
   var template = chrome.extension.getURL('box.html');
-  var currentDate = new Date().toLocaleDateString('en-US');
+  var currentDate = function() {
+    return new Date().toLocaleDateString('en-US');
+  };
   // TODO: Refactor into options
   var LIKES_LIMIT = 10;
 
@@ -12,10 +14,10 @@
      *                  where likes is the retrieved like count
      */
     getLikes: function (callback) {
-      chrome.storage.local.get(currentDate + '-likes', function(items) {
-        console.log("Get Likes: ", items[currentDate + '-likes']);
-        if (items[currentDate + '-likes']) {
-          callback(items[currentDate + '-likes']);
+      chrome.storage.local.get(currentDate() + '-likes', function(items) {
+        console.log("Get Likes: ", items[currentDate() + '-likes']);
+        if (items[currentDate() + '-likes']) {
+          callback(items[currentDate() + '-likes']);
         } else {
           // return 0 as default value
           callback(0);
@@ -29,18 +31,18 @@
      */
     saveLikes: function (likes, callback) {
       var value = {};
-      value[currentDate + '-likes'] = likes;
+      value[currentDate() + '-likes'] = likes;
       chrome.storage.local.set(value, function() {
         console.log("Save Likes: ", likes);
         callback(likes);
       })
     },
     getTimeSpent: function () {
-      var timeSpent = parseInt(localStorage.getItem(currentDate + '-time-spent'));
+      var timeSpent = parseInt(localStorage.getItem(currentDate() + '-time-spent'));
       return isNaN(timeSpent) ? 0 : timeSpent;
     },
     saveTimeSpent: function (time) {
-      localStorage.setItem(currentDate + '-time-spent', time);
+      localStorage.setItem(currentDate() + '-time-spent', time);
     }
   };
 

@@ -8,14 +8,16 @@ function arrayBufferToString(buf) {
   return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
 
-var currentDate = new Date().toLocaleDateString('en-US');
+var currentDate = function() {
+  return new Date().toLocaleDateString('en-US');
+};
 
 var storage = {
   getLikes: function (callback) {
-    chrome.storage.local.get(currentDate + '-likes', function(items) {
-      console.log("Get Likes: ", items[currentDate + '-likes']);
-      if (items[currentDate + '-likes']) {
-        callback(items[currentDate + '-likes']);
+    chrome.storage.local.get(currentDate() + '-likes', function(items) {
+      console.log("Get Likes: ", items[currentDate() + '-likes']);
+      if (items[currentDate() + '-likes']) {
+        callback(items[currentDate() + '-likes']);
       } else {
         callback(0);
       }
@@ -23,7 +25,7 @@ var storage = {
   },
   saveLikes: function (likes, callback) {
     var value = {};
-    value[currentDate + '-likes'] = likes;
+    value[currentDate() + '-likes'] = likes;
     chrome.storage.local.set(value, function() {
       console.log("Save Likes: ", likes);
       callback(likes);

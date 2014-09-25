@@ -24,19 +24,6 @@
         }
       })
     },
-    /**
-     * [ASYNC] Sets the current like count of the day in storage.
-     * @param  callback should be of the form function(likes) {...}
-     *                  where likes is the like count
-     */
-    saveLikes: function (likes, callback) {
-      var value = {};
-      value[currentDate() + '-likes'] = likes;
-      chrome.storage.local.set(value, function() {
-        console.log("Save Likes: ", likes);
-        callback(likes);
-      })
-    },
     getTimeSpent: function () {
       var timeSpent = parseInt(localStorage.getItem(currentDate() + '-time-spent'));
       return isNaN(timeSpent) ? 0 : timeSpent;

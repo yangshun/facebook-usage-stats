@@ -31,6 +31,7 @@ var storage = {
   },
 };
 
+// TODO: Refactor into options
 var LIKES_LIMIT = 10;
 var currentLikes = 0;
 storage.getLikes(function(likes) {

@@ -2,19 +2,31 @@
 
   var template = chrome.extension.getURL('box.html');
   var currentDate = new Date().toLocaleDateString('en-US');
+  // TODO: Refactor into options
   var LIKES_LIMIT = 10;
 
   var storage = {
+    /**
+     * [ASYNC] Retrieve the current like count of the day from storage.
+     * @param  callback should be of the form function(likes) {...}
+     *                  where likes is the retrieved like count
+     */
     getLikes: function (callback) {
       chrome.storage.local.get(currentDate + '-likes', function(items) {
         console.log("Get Likes: ", items[currentDate + '-likes']);
         if (items[currentDate + '-likes']) {
           callback(items[currentDate + '-likes']);
         } else {
+          // return 0 as default value
           callback(0);
         }
       })
     },
+    /**
+     * [ASYNC] Sets the current like count of the day in storage.
+     * @param  callback should be of the form function(likes) {...}
+     *                  where likes is the like count
+     */
     saveLikes: function (likes, callback) {
       var value = {};
       value[currentDate + '-likes'] = likes;
@@ -81,10 +93,12 @@
     chrome.runtime.onMessage.addListener(
       function(message, sender, sendResponse) {
         console.log("Message from extension", message);
+        // New likes triggered from a tab
         if (message.type && message.type == 'updateLike') {
           storage.getLikes(function(likes) {
             $('.fbll-count').text(likes);
           });
+        // A like has been blocked due to reaching daily limit
         } else if (message.type && message.type == 'likeBlocked') {
             alert('Sorry, no more likes for you today!');
         }

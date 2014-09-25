@@ -5,12 +5,23 @@
   var LIKES_LIMIT = 10;
 
   var storage = {
-    getLikes: function () {
-      var likes = parseInt(localStorage.getItem(currentDate + '-likes'));
-      return isNaN(likes) ? 0 : likes;
+    getLikes: function (callback) {
+      chrome.storage.local.get(currentDate + '-likes', function(items) {
+        console.log("Get Likes: ", items[currentDate + '-likes']);
+        if (items[currentDate + '-likes']) {
+          callback(items[currentDate + '-likes']);
+        } else {
+          callback(0);
+        }
+      })
     },
-    saveLikes: function (likes) {
-      localStorage.setItem(currentDate + '-likes', likes);
+    saveLikes: function (likes, callback) {
+      var value = {};
+      value[currentDate + '-likes'] = likes;
+      chrome.storage.local.set(value, function() {
+        console.log("Save Likes: ", likes);
+        callback(likes);
+      })
     },
     getTimeSpent: function () {
       var timeSpent = parseInt(localStorage.getItem(currentDate + '-time-spent'));
@@ -21,7 +32,6 @@
     }
   };
 
-  var currentLikes = storage.getLikes();
 
   var timer = {
     clock: null,
@@ -62,7 +72,9 @@
   });
 
   function init () {
-    $('.fbll-count').text(currentLikes);
+    storage.getLikes(function(likes) {
+      $('.fbll-count').text(likes);
+    });
     $('.fbll-limit').text(LIKES_LIMIT);
     $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
 

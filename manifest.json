@@ -33,6 +33,7 @@
   "permissions": [
     "webRequest",
     "webRequestBlocking",
+    "storage",
     "*://*.facebook.com/"
   ],
 

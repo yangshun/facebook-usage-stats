@@ -75,7 +75,7 @@
       $('.fbll-count').text(message.likes);
     // A like has been blocked due to reaching daily limit
     } else if (message.type && message.type == 'likeBlocked') {
-        alert('Sorry, no more likes for you today!');
+      alert('Sorry, no more likes for you today!');
     }
   }
 

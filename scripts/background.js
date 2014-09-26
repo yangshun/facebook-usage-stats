@@ -23,6 +23,12 @@
         }
       });
     },
+    getLikesLimit: function (callback) {
+      chrome.storage.local.get({likesLimit: 10}, function (items) {
+        console.log('Get Likes Limit: ', items.likesLimit);
+        callback(items.likesLimit);
+      });
+    },
     saveLikes: function (likes, callback) {
       var newStorageItem = {};
       newStorageItem[currentDate() + '-likes'] = likes;
@@ -41,6 +47,10 @@
     currentLikes = likes;
   });
 
+  storage.getLikesLimit(function (likesLimit) {
+    LIKES_LIMIT = likesLimit;
+  });
+
   function broadcastToFacebookTabs (msg) {
     chrome.tabs.query({url: '*://*.facebook.com/*'}, function (tabs) {
       for (var i = 0; i < tabs.length; i++) {
@@ -57,12 +67,16 @@
       // Content script is requesting likes count
       if (message.type && message.type == 'requestLikes') {
         storage.getLikes(function (likes) {
-          console.log('Sending respones via...', sendResponse);
           sendResponse({type: "updateLike", likes: likes});
         });
         // GOTCHA: since getLikes is asynchronous, return true to keep the channel open
         // so sendResponse can be called when getLike callback fires.
         // See: https://developer.chrome.com/extensions/runtime#method-sendMessage
+        return true;
+      } else if (message.type && message.type == 'requestLikesLimit') {
+        storage.getLikesLimit(function (likesLimit) {
+          sendResponse({type: "updateLikesLimit", likesLimit: likesLimit});
+        });
         return true;
       }
   });
@@ -73,6 +87,7 @@
         var queryStr = arrayBufferToString(details.requestBody.raw[0].bytes);
         var query = URI.parseQuery(queryStr)
         if (query.like_action && query.like_action === 'true') {
+          console.log(currentLikes + '/' + LIKES_LIMIT);
           if (currentLikes < LIKES_LIMIT) {
             currentLikes++;
             storage.saveLikes(currentLikes, function (likes) {
@@ -99,4 +114,24 @@
       }
     }, {urls: ['*://www.facebook.com/ajax/ufi/*']}, ['blocking', 'requestBody']);
 
+
+ chrome.storage.onChanged.addListener(function (changes, namespace) {
+    for (key in changes) {
+      var storageChange = changes[key];
+      console.log('Storage key "%s" in namespace "%s" changed. ' +
+                  'Old value was "%s", new value is "%s".',
+                  key,
+                  namespace,
+                  storageChange.oldValue,
+                  storageChange.newValue);
+      // Update limit
+      if (key == 'likesLimit') {
+        LIKES_LIMIT = storageChange.newValue;
+        broadcastToFacebookTabs({
+          type: 'updateLikesLimit',
+          likesLimit: storageChange.newValue
+        });
+      }
+    }
+  });
 })();

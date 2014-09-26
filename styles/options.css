@@ -1,0 +1,24 @@
+body {
+  font: 14px "DejaVu Sans", "Arial", sans-serif;
+  color: #303942;
+  width: 680px;
+  margin: 0 auto;
+}
+
+div#wrapper {
+  width: 500px;
+}
+
+header {
+  font-size: 18px;
+  font-weight: normal;
+  border-bottom: 1px solid #eee;
+  padding: 20px 0 15px 0;
+  width: 100%;
+}
+
+.section {
+  border-bottom: 1px solid #eee;
+  padding: 20px 0 15px 0;
+  width: 100%;
+}

@@ -7,7 +7,10 @@
   "version": "1.0",
 
   "background": {
-    "scripts": ["scripts/background.js", "scripts/vendor/URI.min.js"]
+    "scripts": [
+      "scripts/background.js", 
+      "scripts/vendor/URI.min.js"
+    ]
   },
 
   "content_scripts": [

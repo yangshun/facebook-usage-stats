@@ -7,7 +7,7 @@
     return String.fromCharCode.apply(null, new Uint8Array(buf));
   }
 
-  var currentDate = function() {
+  var currentDate = function () {
     return new Date().toLocaleDateString('en-US');
   };
 
@@ -52,7 +52,7 @@
   chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
       console.log('Message from tab', message);
-      // Content scirpt is requesting likes count
+      // Content script is requesting likes count
       if (message.type && message.type == 'requestLikes') {
         storage.getLikes(function (likes) {
           console.log('Sending respones via...', sendResponse);

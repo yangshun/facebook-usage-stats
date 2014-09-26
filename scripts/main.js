@@ -25,7 +25,6 @@
     }
   };
 
-
   var timer = {
     clock: null,
     currentTimeSpent: storage.getTimeSpent(),
@@ -68,8 +67,7 @@
    * Callback to process a message from another sender.
    * Mainly used to be added as onMessage callback.
    */
-  function onMessage(message, sender, sendResponse) {
-    console.log("Message from extension", message);
+  function onMessage (message, sender, sendResponse) {
     // New likes triggered from a tab
     if (message.type && message.type == 'updateLike') {
       $('.fbll-count').text(message.likes);

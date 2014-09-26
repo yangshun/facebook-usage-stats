@@ -4,7 +4,7 @@
   var currentDate = function() {
     return new Date().toLocaleDateString('en-US');
   };
-  // TODO: Refactor into options
+  // Default
   var LIKES_LIMIT = 10;
 
   var storage = {
@@ -15,6 +15,9 @@
      */
     getLikes: function (callback) {
       chrome.runtime.sendMessage({type: 'requestLikes'}, callback);
+    },
+    getLikesLimit: function (callback) {
+      chrome.runtime.sendMessage({type: 'requestLikesLimit'}, callback);
     },
     getTimeSpent: function () {
       var timeSpent = parseInt(localStorage.getItem(currentDate() + '-time-spent'));
@@ -71,6 +74,9 @@
     // New likes triggered from a tab
     if (message.type && message.type == 'updateLike') {
       $('.fbll-count').text(message.likes);
+    // New likes triggered from a tab
+    } else if (message.type && message.type == 'updateLikesLimit') {
+      $('.fbll-limit').text(message.likesLimit);
     // A like has been blocked due to reaching daily limit
     } else if (message.type && message.type == 'likeBlocked') {
       alert('Sorry, no more likes for you today!');
@@ -79,9 +85,12 @@
 
   function init () {
     storage.getLikes(onMessage);
+    storage.getLikesLimit(onMessage);
 
-    $('.fbll-limit').text(LIKES_LIMIT);
     $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
+
+    var optionsURL = chrome.extension.getURL("options.html");
+    $('#settings-like').attr('href', optionsURL);
 
     chrome.runtime.onMessage.addListener(onMessage);
 

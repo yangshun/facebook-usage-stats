@@ -24,7 +24,9 @@
       });
     },
     saveLikes: function (likes, callback) {
-      chrome.storage.local.set({currentDate() + '-likes': likes}, function () {
+      var newStorageItem = {};
+      newStorageItem[currentDate() + '-likes'] = likes;
+      chrome.storage.local.set(newStorageItem, function () {
         console.log('Save Likes: ', likes);
         callback(likes);
       });

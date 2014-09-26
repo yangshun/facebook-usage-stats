@@ -4,8 +4,6 @@
   var currentDate = function() {
     return new Date().toLocaleDateString('en-US');
   };
-  // Default
-  var LIKES_LIMIT = 10;
 
   var storage = {
     /**

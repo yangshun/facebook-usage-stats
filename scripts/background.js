@@ -43,6 +43,16 @@
   var LIKES_LIMIT = 10;
   var currentLikes = 0;
 
+  var lastDate = currentDate();
+  function allowLike () {
+    var current = currentDate();
+    // reset if it is a new day
+    if (current != lastDate) {
+      currentLikes = 0;
+    }
+    lastDate = current;
+    return currentLikes < LIKES_LIMIT;
+  }
   storage.getLikes(function (likes) {
     currentLikes = likes;
   });
@@ -88,7 +98,7 @@
         var query = URI.parseQuery(queryStr)
         if (query.like_action && query.like_action === 'true') {
           console.log(currentLikes + '/' + LIKES_LIMIT);
-          if (currentLikes < LIKES_LIMIT) {
+          if (allowLike()) {
             currentLikes++;
             storage.saveLikes(currentLikes, function (likes) {
               broadcastToFacebookTabs({

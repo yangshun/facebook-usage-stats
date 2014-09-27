@@ -46,7 +46,7 @@
       this.stopTimer();
       this.clock = setInterval(function () {
         that.currentTimeSpent++;
-        $('.fbll-time-spent').text(that.timeFormat(that.currentTimeSpent));
+        $('.fbus-time-spent').text(that.timeFormat(that.currentTimeSpent));
       }, 1000);
     },
     stopTimer: function () {
@@ -71,10 +71,10 @@
   function onMessage (message, sender, sendResponse) {
     // New likes triggered from a tab
     if (message.type && message.type == 'updateLike') {
-      $('.fbll-count').text(message.likes);
+      $('.fbus-count').text(message.likes);
     // New likes triggered from a tab
     } else if (message.type && message.type == 'updateLikesLimit') {
-      $('.fbll-limit').text(message.likesLimit);
+      $('.fbus-limit').text(message.likesLimit);
     // A like has been blocked due to reaching daily limit
     } else if (message.type && message.type == 'likeBlocked') {
       alert('Sorry, no more likes for you today!');
@@ -85,16 +85,16 @@
     storage.getLikes(onMessage);
     storage.getLikesLimit(onMessage);
 
-    $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
+    $('.fbus-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
 
     var optionsURL = chrome.extension.getURL('options.html');
-    $('.fbll-settings').attr('href', optionsURL);
+    $('.fbus-settings').attr('href', optionsURL);
 
     chrome.runtime.onMessage.addListener(onMessage);
 
     $(window).on('focus', function () {
       timer.currentTimeSpent = storage.getTimeSpent();
-      $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
+      $('.fbus-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
       timer.startTimer();
     });
 

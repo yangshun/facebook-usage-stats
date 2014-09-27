@@ -7,10 +7,10 @@
   color: #000;
   height: auto;
   left: 0;
+  min-width: 130px;
   padding: 7px;
   position: fixed;
   text-align: left;
-  width: auto;
 }
 
 #fbll-count-box span {
@@ -20,6 +20,13 @@
   line-height: 15px;
 }
 
-#settings-like {
-  color: initial;
-};
+#fbll-count-box .fbll-settings {
+  color: #aeafb1; 
+  float: right;
+  visibility: hidden;
+}
+
+#fbll-count-box:hover .fbll-settings {
+  visibility: visible;
+}
+

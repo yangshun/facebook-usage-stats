@@ -22,7 +22,7 @@
         "scripts/main.js"
       ],
       "css": [
-        "styles/style.css"
+        "styles/box.css"
       ]
     }
   ],

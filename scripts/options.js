@@ -1,5 +1,5 @@
 jQuery(function ($) {
-  function save_options () {
+  function saveOptions () {
     var limit = parseInt($('#like-limit').val());
     if (isNaN(limit)) {
       $('#status').text('Please enter a non-negative integer.');
@@ -19,7 +19,7 @@ jQuery(function ($) {
     }
   }
 
-  function restore_options () {
+  function restoreOptions () {
     // Use default limit 10.
     chrome.storage.local.get({
       likesLimit: 10,
@@ -28,6 +28,6 @@ jQuery(function ($) {
     });
   }
 
-  $('#save').click(save_options);
-  restore_options();
-})
+  $('#save').click(saveOptions);
+  restoreOptions();
+});

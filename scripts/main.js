@@ -87,8 +87,8 @@
 
     $('.fbll-time-spent').text(timer.timeFormat(timer.currentTimeSpent));
 
-    var optionsURL = chrome.extension.getURL("options.html");
-    $('#settings-like').attr('href', optionsURL);
+    var optionsURL = chrome.extension.getURL('options.html');
+    $('.fbll-settings').attr('href', optionsURL);
 
     chrome.runtime.onMessage.addListener(onMessage);
 

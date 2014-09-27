@@ -1,4 +1,4 @@
-#fbll-count-box {
+#fbus-count-box {
   background-color: #eef0f1;
   border-top: 1px solid #aab0bf;
   border-right: 1px solid #aab0bf;
@@ -13,20 +13,20 @@
   text-align: left;
 }
 
-#fbll-count-box span {
+#fbus-count-box span {
   font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
   font-size: 12px;
   font-weight: bold;
   line-height: 15px;
 }
 
-#fbll-count-box .fbll-settings {
+#fbus-count-box .fbus-settings {
   color: #aeafb1; 
   float: right;
   visibility: hidden;
 }
 
-#fbll-count-box:hover .fbll-settings {
+#fbus-count-box:hover .fbus-settings {
   visibility: visible;
 }
 

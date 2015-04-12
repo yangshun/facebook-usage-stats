@@ -3,11 +3,13 @@
 Facebook Usage Stats
 ======================
 
+### Preface
+
+In the paper “What Do Metrics Want?”, Ben Grosser, the creator of Facebook Demetricator, mentioned that analytics such as how many things user like per hour, and how many ads they click each day are hidden from users as displaying such metrics would cause users less likely to participate. I found this concept to be interesting and decided to implement a Google Chrome extension that show statistics about a user’s daily Facebook usage. 
+
 ### Introduction
 
-I have come to realize that I have been liking too many things on Facebook and my likes have lost its meaning. Therefore I built this Chrome extension to limit myself to 10 Facebook posts/comments likes a day, so that I will like more sparingly.
-
-Also, it shows me how much time I spend on the Facebook page and I will know how much time I have wasted.
+This Chrome extension allow users to limit myself to a number of Facebook posts/comments likes a day, so that they will like more sparingly. Also, it shows users how much time they have spend on the Facebook page and he will know how much time could have been put to better use.
 
 ### Features
 
